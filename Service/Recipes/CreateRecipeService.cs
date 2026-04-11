@@ -1,8 +1,10 @@
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using RMS.Contants;
+using RMS.CustomDtoValidators;
 using RMS.Dtos;
 using RMS.Entities;
+using RMS.IService.IRecipes;
 
 namespace RMS.Service.Recipes;
 
@@ -10,13 +12,15 @@ public class CreateRecipeService(
     RMSDbContext context,
     IMapper mapper,
     CreateRecipeValidator validator,
-    RecipeBuilder builder
-) 
+    RecipeBuilder builder,
+    CreateRecipeDtoValidator createRecipeDtoValidator
+) : ICreateRecipeService
 {
     private readonly RMSDbContext _context = context;
     private readonly IMapper _mapper = mapper;
     private readonly CreateRecipeValidator _validator = validator;
     private readonly RecipeBuilder _builder = builder;
+    private readonly CreateRecipeDtoValidator _createRecipeDtoValidator = createRecipeDtoValidator;
 
     private async Task<bool> IsTitleDuplicateAsync(string title)
     {
@@ -41,24 +45,13 @@ public class CreateRecipeService(
 
     private async Task<ServiceResult?> ValidateRelaatedDataAsync(RecipeCreateDto request)
     {
-          if (request.Tags == null || request.Tags.Length == 0)
-        {
-            return await Task.FromResult(new ServiceResult(false, ErrorCode.BadRequest.GetHashCode(), "At least one tag is required."));
-        }
         var tags = await GetExistingTagIdAsync(request.Tags);
-
         if (tags.Count != request.Tags.Length)
         {
             return await Task.FromResult(new ServiceResult(false, ErrorCode.BadRequest.GetHashCode(), "One or more tags do not exist."));
         }
 
-        if (request.RecipeIngredients == null || request.RecipeIngredients.Count == 0)
-        {
-            return await Task.FromResult(new ServiceResult(false, ErrorCode.BadRequest.GetHashCode(), "At least one ingredient is required."));
-        }
-
         var ingredientIds = await GetExistingIngredientIdAsync(request.RecipeIngredients.Select(ri => ri.ID));
-        
         if (ingredientIds.Count != request.RecipeIngredients.Count)
         {
             return await Task.FromResult(new ServiceResult(false, ErrorCode.BadRequest.GetHashCode(), "One or more ingredients do not exist."));
@@ -67,9 +60,20 @@ public class CreateRecipeService(
         return await Task.FromResult<ServiceResult?>(null);
     }
 
-    private ServiceResult? ValidateBusinessRulesAsync(RecipeCreateDto request)
+    private ServiceResult? ValidateBusinessRule(RecipeCreateDto request)
     {
-        var validationErrors = _validator.RecipeBusinessRules(request);
+        var validationErrors = _createRecipeDtoValidator.Validate(request);
+        if (validationErrors.Errors.Count > 0)
+        {
+            var messageErrorr = string.Join("\n", validationErrors.Errors.Select(e => $"{e.PropertyName}: {e.ErrorMessage}"));
+            return new ServiceResult(false, ErrorCode.BadRequest.GetHashCode(), messageErrorr);
+        }
+        return null;
+    }
+
+    private ServiceResult? ValidateBusinessRules(Recipe recipe)
+    {
+        var validationErrors = _validator.RecipeBusinessRules(recipe);
         if (validationErrors.Length > 0)
         {
             var messageErrorr = string.Join("\n", validationErrors.Select(e => $"{e.Field}: {e.Message}"));
@@ -85,17 +89,21 @@ public class CreateRecipeService(
         return _builder.Build(recipe, request);
     }
 
+
+    // https://www.coursera.org/courses?query=system%20design&irclickid=yzvWq%3AznlxyZRU6yAnyML2POUku30fyRfwGYxw0&irgwc=1&afsrc=1&utm_medium=partners&utm_source=impact&utm_campaign=6700588&utm_content=b2c&utm_campaignid=Coc%20Coc%20Search&utm_term=14726_SC_1164545_1631165870
+
     public async Task<ServiceResult> ExecuteAsync(int userId, RecipeCreateDto request)
     {
-        request.Title = request.Title.Trim();
-        request.Description = request.Description.Trim();
-        request.SearchKeyword.Keywords = [..request.SearchKeyword.Keywords.Select(k => k.Trim())];
-        request.SearchKeyword.Hashtags = [..request.SearchKeyword.Hashtags.Select(h => h.Trim())];
+        var cleanRequestContextResultError = ValidateBusinessRule(request);
+        if (cleanRequestContextResultError != null)
+        {
+            return cleanRequestContextResultError;
+        }
 
         var IsTitleDuplicateResult = await IsTitleDuplicateAsync(request.Title);
         if (IsTitleDuplicateResult)
         {
-            return new ServiceResult(false, ErrorCode.BadRequest.GetHashCode(), "Title already exists.");
+            return new ServiceResult(false, ErrorCode.Conflict.GetHashCode(), "Title already exists.");
         }
 
         var validateRelaatedDataResult = await ValidateRelaatedDataAsync(request);
@@ -107,13 +115,13 @@ public class CreateRecipeService(
         request.Tags = [..request.Tags!.Distinct()];
         request.RecipeIngredients = [.. request.RecipeIngredients.Distinct()];
 
-        var validateBusinessRulesResult = ValidateBusinessRulesAsync(request);
+        var recipe = BuildRecipe(userId, request);
+        var validateBusinessRulesResult = ValidateBusinessRules(recipe);
         if (validateBusinessRulesResult != null)
         {
             return validateBusinessRulesResult;
         }
 
-        var recipe = BuildRecipe(userId, request);
         await _context.Recipes.AddAsync(recipe);
         await _context.SaveChangesAsync();
         return new ServiceResult(true, SuccessCode.Created.GetHashCode(), "Recipe created successfully.", recipe.ID);

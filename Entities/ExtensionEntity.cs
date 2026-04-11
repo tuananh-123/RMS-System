@@ -22,5 +22,3 @@ public static class ExtensionEntity
         return Array.Empty<ValidationResult>();
     }
 }
-
-public record struct ValidationResult(string Field, string Message);
