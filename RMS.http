@@ -1,0 +1,49 @@
+@RMS_HostAddress = http://localhost:5181
+
+GET {{RMS_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
+
+POST {{RMS_HostAddress}}/api/Recipe/add/by/1
+Content-Type: application/json
+
+{
+	"title": "Phở bò Hà Nội",
+	"description": "Nước dùng bò đậm đà ăn kèm bánh phở và rau thơm.",
+	"nation": "Vietnam",
+	"cuisine": "1,2",
+	"serving": 4,
+	"totalCalories": 0,
+	"cookingTime": 90,
+	"difficulty": "Medium",
+	"imageCover": "https://images.example.com/pho-bo.jpg",
+	"videoUrl": "https://www.youtube.com/watch?v=example",
+	"searchKeyword": {
+		"hashtags": ["#phở", "#mónViệt", "#bò"],
+		"keywords": ["phở bò", "phở Hà Nội", "bún bánh nước dùng"]
+	},
+	"tags": [1, 2, 3],
+	"recipeIngredients": [
+		{
+			"id": "1",
+			"quantity": 500,
+			"unit": "gram",
+			"caloPer100Gram": 250
+		},
+		{
+			"id": "2",
+			"quantity": 300,
+			"unit": "gram",
+			"caloPer100Gram": 180
+		},
+		{
+			"id": "3",
+			"quantity": 50,
+			"unit": "gram",
+			"caloPer100Gram": 30
+		}
+	]
+}
+
+###
