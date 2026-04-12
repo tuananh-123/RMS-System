@@ -23,7 +23,7 @@ public class RMSDbContext(DbContextOptions<RMSDbContext> options) : IdentityDbCo
             .HasMany(r => r.RecipeHistories)
             .WithOne(rh => rh.Recipe)
             .HasForeignKey(rh => rh.RecipeID)
-            .OnDelete(DeleteBehavior.Cascade);
+            .OnDelete(DeleteBehavior.Restrict);
 
         // định nghĩa enum dưới dạng int trong database
         modelBuilder.Entity<Recipe>()

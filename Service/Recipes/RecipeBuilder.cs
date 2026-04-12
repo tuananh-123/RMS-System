@@ -1,9 +1,10 @@
 using RMS.Dtos;
 using RMS.Entities;
+using RMS.IService.IRecipes;
 
 namespace RMS.Service.Recipes;
 
-public class RecipeBuilder
+public class RecipeBuilder : IRecipeBuilder
 {
     public Recipe Build(Recipe recipe, RecipeCreateDto request)
     {

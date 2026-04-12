@@ -1,12 +1,13 @@
 using RMS.Contants;
 using RMS.Dtos;
 using RMS.Entities;
+using RMS.IService.IRecipes;
 
 namespace RMS.Service.Recipes;
 
-public class CreateRecipeValidator
+public class CreateRecipeValidator : ICreateRecipeValidator
 {
-    public ValidationResult[] RecipeBusinessRules(Recipe request)
+    public ValidationResult[] ValidateBusinessRules(Recipe request)
     {
         var rules = new List<Func<Recipe, ValidationResult?>>
         {
