@@ -4,9 +4,7 @@ namespace RMS.Entities;
 
 public class RecipeIngredient
 {
-    [Required]
     public string Unit { get; set; } = string.Empty;
-    [Required]
     public double Quantity { get; set; }
     public Recipe Recipe { get; set; } = null!;
     public int RecipeID { get; set; }
