@@ -52,6 +52,8 @@ static void ConfigureApplicationServices(IServiceCollection service)
 static void ConfigureApiServices(IServiceCollection services)
 {
     services.AddControllers();
+    services.AddOpenApi();
+
     services.AddAuthentication();
     services.AddAuthorization();
 }
