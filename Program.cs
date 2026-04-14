@@ -1,35 +1,60 @@
 using Microsoft.EntityFrameworkCore;
 using RMS;
+using RMS.CustomDtoValidators;
+using RMS.Infrastructure.Middleware;
 using RMS.IService;
+using RMS.IService.IRecipes;
 using RMS.Service;
+using RMS.Service.Recipes;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddOpenApi();
 
-builder.Services.AddDbContext<RMSDbContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+ConfigureDbPeristenceService(builder.Services, builder.Configuration);
+ConfigureApplicationServices(builder.Services);
+ConfigureApiServices(builder.Services);
 
 
-builder.Services.AddAutoMapper(typeof(Program).Assembly);
-builder.Services.AddScoped<IRecipeService, RecipeService>();
-builder.Services.AddScoped<IRecipeHistoryService, RecipeHistoryService>();
-builder.Services.AddScoped<ITagService, TagService>();
-builder.Services.AddScoped<IIngredientService, IngredientService>();
-
-builder.Services.AddControllers();
 var app = builder.Build();
-
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
 }
 
+app.UseMiddleware<ApiExceptionHandlingMiddleware>();
+
+app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.UseHttpsRedirection();
 app.MapControllers();
 app.Run();
 
+static void ConfigureDbPeristenceService(IServiceCollection services, IConfiguration configuration)
+{
+    services.AddDbContext<RMSDbContext>(options =>
+    options.UseNpgsql(configuration.GetConnectionString("DefaultConnection")));
+}
+
+static void ConfigureApplicationServices(IServiceCollection service)
+{
+    service.AddAutoMapper(typeof(Program).Assembly);
+    service.AddScoped<IRecipeHistoryService, RecipeHistoryService>();
+    service.AddScoped<ITagService, TagService>();
+    service.AddScoped<IIngredientService, IngredientService>();
+    service.AddScoped<ICreateRecipeService, CreateRecipeService>();
+    service.AddScoped<ICreateRecipeValidator, CreateRecipeValidator>();
+    service.AddScoped<IRecipeBuilder, RecipeBuilder>();
+    service.AddScoped<CreateRecipeDtoValidator>();
+}
+
+static void ConfigureApiServices(IServiceCollection services)
+{
+    services.AddControllers();
+    services.AddOpenApi();
+
+    services.AddAuthentication();
+    services.AddAuthorization();
+}
 

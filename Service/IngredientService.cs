@@ -1,5 +1,6 @@
 using AutoMapper;
 using RMS.IService;
+using RMS.Entities;
 
 namespace RMS.Service;
 

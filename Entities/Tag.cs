@@ -4,6 +4,6 @@ using RMS.Entities;
 public class Tag : BaseEntity
 {
     [Required]
-    public string Color { get; set; }
-    public ICollection<TagForRecipe> TagForRecipes { get; set; }
+    public string Color { get; set; } = string.Empty;
+    public ICollection<TagForRecipe> TagForRecipes { get; set; } = null!;
 }

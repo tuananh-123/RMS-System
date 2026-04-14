@@ -1,31 +1,37 @@
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using RMS.Contants;
+using RMS.CustomDtoValidators;
 using RMS.Dtos;
 using RMS.Entities;
+using RMS.IService.IRecipes;
 
 namespace RMS.Service.Recipes;
 
 public class CreateRecipeService(
     RMSDbContext context,
     IMapper mapper,
-    CreateRecipeValidator validator,
-    RecipeBuilder builder
-) 
+    ICreateRecipeValidator validator,
+    IRecipeBuilder builder,
+    CreateRecipeDtoValidator createRecipeDtoValidator,
+    ILogger<CreateRecipeService> logger
+) : ICreateRecipeService
 {
     private readonly RMSDbContext _context = context;
     private readonly IMapper _mapper = mapper;
-    private readonly CreateRecipeValidator _validator = validator;
-    private readonly RecipeBuilder _builder = builder;
+    private readonly ICreateRecipeValidator _validator = validator;
+    private readonly IRecipeBuilder _builder = builder;
+    private readonly ILogger<CreateRecipeService> _logger = logger;
+    private readonly CreateRecipeDtoValidator _createRecipeDtoValidator = createRecipeDtoValidator;
 
-    private async Task<bool> IsTitleDuplicateAsync(string title)
+    private async Task<bool> CheckTitleDuplicateAsync(string title)
     {
-        return await _context.Recipes.AnyAsync(r => r.Title.Trim().ToLower() == title.Trim().ToLower());
+        return await _context.Recipes.AnyAsync(r => r.Title.Equals(title, StringComparison.OrdinalIgnoreCase));
     }
 
     private async Task<HashSet<int>> GetExistingTagIdAsync(IEnumerable<int> tagIds)
     {
-        return await _context.Tags
+        return await _context.Tags.AsNoTracking()
             .Where(t => tagIds.Contains(t.ID))
             .Select(t => t.ID)
             .ToHashSetAsync();
@@ -33,47 +39,53 @@ public class CreateRecipeService(
 
     private async Task<HashSet<int>> GetExistingIngredientIdAsync(IEnumerable<int> ingredientIds)
     {
-        return await _context.Ingredients
+        return await _context.Ingredients.AsNoTracking()
             .Where(i => ingredientIds.Contains(i.ID))
             .Select(i => i.ID)
             .ToHashSetAsync();
     }
 
-    private async Task<ServiceResult?> ValidateRelaatedDataAsync(RecipeCreateDto request)
+    private void NormalizeRequest(RecipeCreateDto request)
     {
-          if (request.Tags == null || request.Tags.Length == 0)
-        {
-            return await Task.FromResult(new ServiceResult(false, ErrorCode.BadRequest.GetHashCode(), "At least one tag is required."));
-        }
-        var tags = await GetExistingTagIdAsync(request.Tags);
+        request.Tags = [..request.Tags!.Distinct()];
+        request.RecipeIngredients = [.. request.RecipeIngredients.Distinct()];
+    }
 
+    private async Task<ServiceResult?> ValidateRelatedDataAsync(RecipeCreateDto request)
+    {
+        var tags = await GetExistingTagIdAsync(request.Tags);
         if (tags.Count != request.Tags.Length)
         {
-            return await Task.FromResult(new ServiceResult(false, ErrorCode.BadRequest.GetHashCode(), "One or more tags do not exist."));
-        }
-
-        if (request.RecipeIngredients == null || request.RecipeIngredients.Count == 0)
-        {
-            return await Task.FromResult(new ServiceResult(false, ErrorCode.BadRequest.GetHashCode(), "At least one ingredient is required."));
+            return new ServiceResult(false, StatusCodes.Status400BadRequest, "One or more tags do not exist.");
         }
 
         var ingredientIds = await GetExistingIngredientIdAsync(request.RecipeIngredients.Select(ri => ri.ID));
-        
         if (ingredientIds.Count != request.RecipeIngredients.Count)
         {
-            return await Task.FromResult(new ServiceResult(false, ErrorCode.BadRequest.GetHashCode(), "One or more ingredients do not exist."));
+            return new ServiceResult(false, StatusCodes.Status400BadRequest, "One or more ingredients do not exist.");
         }
 
-        return await Task.FromResult<ServiceResult?>(null);
+        return null;
     }
 
-    private ServiceResult? ValidateBusinessRulesAsync(RecipeCreateDto request)
+    private ServiceResult? ValidateInputRequest(RecipeCreateDto request)
     {
-        var validationErrors = _validator.RecipeBusinessRules(request);
+        var validationErrors = _createRecipeDtoValidator.Validate(request);
+        if (validationErrors.Errors.Count > 0)
+        {
+            var messageErrorr = string.Join("; ", validationErrors.Errors.Select(e => $"{e.PropertyName}: {e.ErrorMessage}"));
+            return new ServiceResult(false, StatusCodes.Status400BadRequest, messageErrorr);
+        }
+        return null;
+    }
+
+    private ServiceResult? ValidateBusinessRules(Recipe recipe)
+    {
+        var validationErrors = _validator.ValidateBusinessRules(recipe);
         if (validationErrors.Length > 0)
         {
-            var messageErrorr = string.Join("\n", validationErrors.Select(e => $"{e.Field}: {e.Message}"));
-            return new ServiceResult(false, ErrorCode.BadRequest.GetHashCode(), messageErrorr);
+            var messageErrorr = string.Join("; ", validationErrors.Select(e => $"{e.Field}: {e.Message}"));
+            return new ServiceResult(false, StatusCodes.Status400BadRequest, messageErrorr);
         }
         return null;
     }
@@ -85,38 +97,87 @@ public class CreateRecipeService(
         return _builder.Build(recipe, request);
     }
 
+    private async Task<ServiceResult> PersistRecipeAsync(Recipe recipe)
+    {
+        try
+        {
+            using var transaction = await _context.Database.BeginTransactionAsync();
+
+            await _context.Recipes.AddAsync(recipe);
+            await _context.SaveChangesAsync();
+
+            await transaction.CommitAsync();
+            return new ServiceResult(true, StatusCodes.Status201Created, "Recipe created successfully.", recipe.ID);
+        }
+        catch (DbUpdateException dbEx)
+        {
+            _logger.LogError(dbEx, "Database error occurred while creating recipe.");
+            return MapDbException(dbEx);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "An unexpected error occurred while creating recipe.");
+            return new ServiceResult(false, StatusCodes.Status500InternalServerError, "An unexpected error occurred. Please try again later.");
+        }
+    }
+
+    private static ServiceResult MapDbException(DbUpdateException dbEx)
+    {
+        if (dbEx.InnerException is Npgsql.PostgresException pgEx)
+        {
+            if (pgEx.SqlState == "23505") // Unique violation
+            {
+                return new ServiceResult(false, StatusCodes.Status409Conflict, "A recipe with the same value already exists.");
+            }
+        }
+
+        return new ServiceResult(false, StatusCodes.Status500InternalServerError, "Database operation failed.");
+    }
+
+    // https://www.coursera.org/courses?query=system%20design&irclickid=yzvWq%3AznlxyZRU6yAnyML2POUku30fyRfwGYxw0&irgwc=1&afsrc=1&utm_medium=partners&utm_source=impact&utm_campaign=6700588&utm_content=b2c&utm_campaignid=Coc%20Coc%20Search&utm_term=14726_SC_1164545_1631165870
+
     public async Task<ServiceResult> ExecuteAsync(int userId, RecipeCreateDto request)
     {
-        request.Title = request.Title.Trim();
-        request.Description = request.Description.Trim();
-        request.SearchKeyword.Keywords = [..request.SearchKeyword.Keywords.Select(k => k.Trim())];
-        request.SearchKeyword.Hashtags = [..request.SearchKeyword.Hashtags.Select(h => h.Trim())];
-
-        var IsTitleDuplicateResult = await IsTitleDuplicateAsync(request.Title);
-        if (IsTitleDuplicateResult)
+        // step 1: validate input request
+        var validateInputRequestError = ValidateInputRequest(request);
+        if (validateInputRequestError != null)
         {
-            return new ServiceResult(false, ErrorCode.BadRequest.GetHashCode(), "Title already exists.");
+            _logger.LogWarning("Validation failed for recipe creation request by user {userId}: {error}", userId, validateInputRequestError.Message);
+            return validateInputRequestError;
         }
 
-        var validateRelaatedDataResult = await ValidateRelaatedDataAsync(request);
-        if (validateRelaatedDataResult != null)
+        // step 2: check title duplicate
+        var checkTitleDuplicateResult = await CheckTitleDuplicateAsync(request.Title);
+        if (checkTitleDuplicateResult)
         {
-            return validateRelaatedDataResult;
+            _logger.LogWarning("Duplicate title detected for recipe creation request by user {userId}: {title}", userId, request.Title);
+            return new ServiceResult(false, StatusCodes.Status409Conflict, "Title already exists.");
         }
 
-        request.Tags = [..request.Tags!.Distinct()];
-        request.RecipeIngredients = [.. request.RecipeIngredients.Distinct()];
+        // step 3: validate related data (tags, ingredients)
+        var validateRelatedDataResult = await ValidateRelatedDataAsync(request);
+        if (validateRelatedDataResult != null)
+        {
+            _logger.LogWarning("Related data validation failed for recipe creation request by user {userId}: {error}", userId, validateRelatedDataResult.Message);
+            return validateRelatedDataResult;
+        }
 
-        var validateBusinessRulesResult = ValidateBusinessRulesAsync(request);
+        // step 4: normalize request data (remove duplicates in tags and ingredients)
+        NormalizeRequest(request);
+
+        // step 5: build recipe entity
+        var recipe = BuildRecipe(userId, request);
+
+        // step 6: validate business rules
+        var validateBusinessRulesResult = ValidateBusinessRules(recipe);
         if (validateBusinessRulesResult != null)
         {
+            _logger.LogWarning("Business rules validation failed for recipe creation request by user {userId}: {error}", userId, validateBusinessRulesResult.Message);
             return validateBusinessRulesResult;
         }
 
-        var recipe = BuildRecipe(userId, request);
-        await _context.Recipes.AddAsync(recipe);
-        await _context.SaveChangesAsync();
-        return new ServiceResult(true, SuccessCode.Created.GetHashCode(), "Recipe created successfully.", recipe.ID);
+        // step 7: persist recipe to database
+        return await PersistRecipeAsync(recipe);
     }
 
 }
