@@ -5,7 +5,7 @@ using RMS.IService.IRecipes;
 
 namespace RMS.Service.Recipes;
 
-public class CreateRecipeValidator : ICreateRecipeValidator
+public class RecipeValidator
 {
     public ValidationResult[] ValidateBusinessRules(Recipe request)
     {

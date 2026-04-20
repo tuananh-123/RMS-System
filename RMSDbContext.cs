@@ -1,5 +1,8 @@
+using System.Text.Json;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+// using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RMS.Entities;
 
 namespace RMS;
@@ -10,7 +13,6 @@ public class RMSDbContext(DbContextOptions<RMSDbContext> options) : IdentityDbCo
     public DbSet<Ingredient> Ingredients { get; set; }
     public DbSet<Tag> Tags { get; set; }
     public DbSet<RecipeHistory> RecipeHistories { get; set; }
-    
     public DbSet<TagForRecipe> TagForRecipes { get; set; }
     public DbSet<RecipeIngredient> RecipeIngredients { get; set; }
 
@@ -64,9 +66,19 @@ public class RMSDbContext(DbContextOptions<RMSDbContext> options) : IdentityDbCo
             .HasForeignKey(rt => rt.TagID)
             .OnDelete(DeleteBehavior.Cascade);
 
+        modelBuilder.Entity<Recipe>()
+            .Property(r => r.RowVersion)
+            .IsRowVersion()
+            .IsConcurrencyToken().HasColumnType("bytea");
+
+        var searchKeywordConverter = new ValueConverter<SearchKeyword?, string>(
+            sk => JsonSerializer.Serialize(sk),
+            json => JsonSerializer.Deserialize<SearchKeyword>(json));
+
         // khai báo SearchKeyword là jsonb
-        modelBuilder.Entity<Recipe>().Property(r => r.SearchKeyword).HasColumnType("jsonb");
-        modelBuilder.Entity<Ingredient>().Property(i => i.SearchKeyword).HasColumnType("jsonb");
+        modelBuilder.Entity<Recipe>().Property(r => r.SearchKeyword).HasColumnType("jsonb").HasConversion(searchKeywordConverter);
+        
+        modelBuilder.Entity<Ingredient>().Property(i => i.SearchKeyword).HasColumnType("jsonb").HasConversion(searchKeywordConverter);
 
         // Composite key cho RecipeIngredient
         modelBuilder.Entity<RecipeIngredient>().HasKey(ri => new { ri.RecipeID, ri.IngredientID });

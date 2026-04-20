@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using RMS.Contants;
 
@@ -21,11 +22,14 @@ public class Recipe : BaseEntity
     public string VideoUrl { get; set; } = string.Empty;
     // map ignore
     public int LastedVersion { get; set; } = 1;
+    // Optimistic locking for concurrent updates
+    [Timestamp]
+    public byte[]? RowVersion { get; set; }
     public SearchKeyword? SearchKeyword { get; set; } = null;
     // map ignore
-    public ICollection<TagForRecipe> TagForRecipes { get; set; } = new List<TagForRecipe>();
+    public ICollection<TagForRecipe> TagForRecipes { get; set; } = [];
     // map ignore
-    public ICollection<RecipeIngredient> RecipeIngredients { get; set; } = new List<RecipeIngredient>();
+    public ICollection<RecipeIngredient> RecipeIngredients { get; set; } = [];
     // map ignore
-    public ICollection<RecipeHistory> RecipeHistories { get; set; } = new List<RecipeHistory>();
+    public ICollection<RecipeHistory> RecipeHistories { get; set; } = [];
 }

@@ -11,22 +11,22 @@ namespace RMS.Service.Recipes;
 public class CreateRecipeService(
     RMSDbContext context,
     IMapper mapper,
-    ICreateRecipeValidator validator,
-    IRecipeBuilder builder,
+    RecipeValidator validator,
+    RecipeBuilder builder,
     CreateRecipeDtoValidator createRecipeDtoValidator,
     ILogger<CreateRecipeService> logger
 ) : ICreateRecipeService
 {
     private readonly RMSDbContext _context = context;
     private readonly IMapper _mapper = mapper;
-    private readonly ICreateRecipeValidator _validator = validator;
-    private readonly IRecipeBuilder _builder = builder;
+    private readonly RecipeValidator _validator = validator;
+    private readonly RecipeBuilder _builder = builder;
     private readonly ILogger<CreateRecipeService> _logger = logger;
     private readonly CreateRecipeDtoValidator _createRecipeDtoValidator = createRecipeDtoValidator;
 
     private async Task<bool> CheckTitleDuplicateAsync(string title)
     {
-        return await _context.Recipes.AnyAsync(r => r.Title.Equals(title, StringComparison.OrdinalIgnoreCase));
+        return await _context.Recipes.AnyAsync(r => r.Title.Trim().ToLower() == title.Trim().ToLower());
     }
 
     private async Task<HashSet<int>> GetExistingTagIdAsync(IEnumerable<int> tagIds)
@@ -45,10 +45,31 @@ public class CreateRecipeService(
             .ToHashSetAsync();
     }
 
-    private void NormalizeRequest(RecipeCreateDto request)
+    private static void NormalizeRequest(RecipeCreateDto request)
     {
-        request.Tags = [..request.Tags!.Distinct()];
-        request.RecipeIngredients = [.. request.RecipeIngredients.Distinct()];
+        foreach (var property in typeof(RecipeCreateDto).GetProperties())
+        {
+            if (property.PropertyType == typeof(string))
+            {
+                var value = property.GetValue(request) as string;
+                property.SetValue(request, value!.Trim());
+            }
+        }
+
+        request.SearchKeyword = new SearchKeyword
+        {
+            Hashtags = [..request.SearchKeyword!.Hashtags.Select(h => h.Trim())],
+            Keywords = [.. request.SearchKeyword!.Keywords.Select(kw => kw.Trim())]
+        };
+
+        request.Tags = [.. request.Tags!.Distinct()];
+        request.RecipeIngredients = [.. request.RecipeIngredients.GroupBy(r => r.ID).Select(x => new RecipeIngredientCreateDto
+        {
+            ID = x.Key,
+            Quantity = x.Sum(ri => ri.Quantity),
+            Unit = x.First().Unit,
+            CaloPer100Gram = x.First().CaloPer100Gram
+        })];
     }
 
     private async Task<ServiceResult?> ValidateRelatedDataAsync(RecipeCreateDto request)
@@ -94,7 +115,7 @@ public class CreateRecipeService(
     {
         var recipe = _mapper.Map<Recipe>(request);
         recipe.CreatedBy = userId.ToString();
-        return _builder.Build(recipe, request);
+        return _builder.BuildCreate(recipe, request);
     }
 
     private async Task<ServiceResult> PersistRecipeAsync(Recipe recipe)
@@ -154,16 +175,16 @@ public class CreateRecipeService(
             return new ServiceResult(false, StatusCodes.Status409Conflict, "Title already exists.");
         }
 
-        // step 3: validate related data (tags, ingredients)
+        // step 3: normalize request data (remove duplicates in tags and ingredients)
+        NormalizeRequest(request);
+
+        // step 4: validate related data (tags, ingredients)
         var validateRelatedDataResult = await ValidateRelatedDataAsync(request);
         if (validateRelatedDataResult != null)
         {
             _logger.LogWarning("Related data validation failed for recipe creation request by user {userId}: {error}", userId, validateRelatedDataResult.Message);
             return validateRelatedDataResult;
         }
-
-        // step 4: normalize request data (remove duplicates in tags and ingredients)
-        NormalizeRequest(request);
 
         // step 5: build recipe entity
         var recipe = BuildRecipe(userId, request);

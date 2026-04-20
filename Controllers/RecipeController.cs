@@ -11,26 +11,71 @@ namespace RMS.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class RecipeController(ICreateRecipeService service, ILogger<RecipeController> logger) : ControllerBase
+public class RecipeController(
+    ICreateRecipeService createService, 
+    IUpdateRecipeService updateService,
+    IRecipePagingService recipePagingService, 
+    IRecipeDetailService recipeDetailService,
+    ILogger<RecipeController> logger) : ControllerBase
 {
-    readonly ICreateRecipeService _service = service;
-    readonly ILogger<RecipeController> _logger = logger;
+    private readonly ICreateRecipeService _createService = createService;
+    private readonly IUpdateRecipeService _updateService = updateService;
+    private readonly IRecipePagingService _recipePagingService = recipePagingService;
+    private readonly IRecipeDetailService _recipeDetailService = recipeDetailService;
+    private readonly ILogger<RecipeController> _logger = logger;
 
-    [Authorize]
+    [AllowAnonymous]
+    [HttpGet("get/page/{pageNumber}/size/{pageSize}")]
+    public async Task<IActionResult> GetRecipeAsync(int pageNumber, int pageSize)
+    {
+        _logger.LogInformation("Fetching recipes for page {pageNumber} with size {pageSize}", pageNumber, pageSize);
+
+        var result = await _recipePagingService.GetRecipePagingAsync(pageNumber, pageSize);
+        return result.OK();
+    }
+
+    [AllowAnonymous]
+    [HttpGet("get/detail/{recipeId}")]
+    public async Task<IActionResult> GetRecipeDetailAsync(int recipeId)
+    {
+        _logger.LogInformation("Fetching details for recipe {recipeId}", recipeId);
+
+        var result = await _recipeDetailService.GetRecipeDetailAsync(recipeId);
+        return result.OK();
+    }
+
+    // [Authorize]
     [HttpPost("add/by/{userId}")]
     public async Task<IActionResult> AddRecipeAsync(int userId, RecipeCreateDto recipe)
     {
         _logger.LogInformation("Creating recipe for user {userId}", userId);
 
-        var userIdFromClaims = GetUserIdFromClaims();
-        if (userIdFromClaims == null || userIdFromClaims != userId)
-        {
-            _logger.LogWarning("Unauthorized attempt to create recipe for user {userId}", userId);
-            return Forbid();
-        }
+        // var userIdFromClaims = GetUserIdFromClaims();
+        // if (userIdFromClaims == null || userIdFromClaims != userId)
+        // {
+        //     _logger.LogWarning("Unauthorized attempt to create recipe for user {userId}", userId);
+        //     return Forbid();
+        // }
 
-        var result = await _service.ExecuteAsync(userId, recipe);
+        var result = await _createService.ExecuteAsync(userId, recipe);
         _logger.LogInformation("Create recipe result for user {userId}: {result}", userId, result.Success ? "Success" : $"Failure - {result.Message}");
+        return ToActionResult(result);
+    }
+
+    [HttpPut("update/{recipeId}/by/{userId}")]
+    public async Task<IActionResult> UpdateRecipeAsync(int recipeId, int userId, RecipeUpdateDto recipe)
+    {
+        _logger.LogInformation("Updating recipe {recipeId} for user {userId}", recipeId, userId);
+
+        // var userIdFromClaims = GetUserIdFromClaims();
+        // if (userIdFromClaims == null || userIdFromClaims != userId)
+        // {
+        //     _logger.LogWarning("Unauthorized attempt to create recipe for user {userId}", userId);
+        //     return Forbid();
+        // }
+
+        var result = await _updateService.ExecuteSync(userId, recipeId, recipe);
+        _logger.LogInformation("Update recipe {recipeId} result for user {userId}: {result}", recipeId, userId, result.Success ? "Success" : $"Failure - {result.Message}");
         return ToActionResult(result);
     }
 
@@ -50,7 +95,9 @@ public class RecipeController(ICreateRecipeService service, ILogger<RecipeContro
     {
         if (result.Success)
         {
-            return result.Code == StatusCodes.Status201Created ? CreatedAtAction(nameof(AddRecipeAsync), new { id = result.Data }, result) : Ok(result);
+            return result.Code == StatusCodes.Status201Created
+                ? StatusCode(StatusCodes.Status201Created, result)
+                : Ok(result);
         }
 
         return result.Code switch

@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using RMS;
 using RMS.CustomDtoValidators;
+using RMS.CustomDtoValidators.Recipes;
 using RMS.Infrastructure.Middleware;
 using RMS.IService;
 using RMS.IService.IRecipes;
@@ -25,8 +26,8 @@ if (app.Environment.IsDevelopment())
 app.UseMiddleware<ApiExceptionHandlingMiddleware>();
 
 app.UseHttpsRedirection();
-app.UseAuthentication();
-app.UseAuthorization();
+// app.UseAuthentication();
+// app.UseAuthorization();
 
 app.MapControllers();
 app.Run();
@@ -44,9 +45,13 @@ static void ConfigureApplicationServices(IServiceCollection service)
     service.AddScoped<ITagService, TagService>();
     service.AddScoped<IIngredientService, IngredientService>();
     service.AddScoped<ICreateRecipeService, CreateRecipeService>();
-    service.AddScoped<ICreateRecipeValidator, CreateRecipeValidator>();
-    service.AddScoped<IRecipeBuilder, RecipeBuilder>();
+    service.AddScoped<IUpdateRecipeService, UpdateRecipeService>();
+    service.AddScoped<IRecipePagingService, RecipePagingService>();
+    service.AddScoped<IRecipeDetailService, RecipeDetailService>();
+    service.AddScoped<RecipeValidator>();
+    service.AddScoped<RecipeBuilder>();
     service.AddScoped<CreateRecipeDtoValidator>();
+    service.AddScoped<UpdateRecipeDtoValidator>();
 }
 
 static void ConfigureApiServices(IServiceCollection services)
