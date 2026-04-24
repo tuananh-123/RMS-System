@@ -1,11 +1,14 @@
 using Microsoft.EntityFrameworkCore;
 using RMS;
 using RMS.CustomDtoValidators;
+using RMS.CustomDtoValidators.Ingredients;
 using RMS.CustomDtoValidators.Recipes;
 using RMS.Infrastructure.Middleware;
 using RMS.IService;
+using RMS.IService.IIngredients.ICreate;
 using RMS.IService.IRecipes;
 using RMS.Service;
+using RMS.Service.Ingredients.Create;
 using RMS.Service.Recipes;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -52,6 +55,12 @@ static void ConfigureApplicationServices(IServiceCollection service)
     service.AddScoped<RecipeBuilder>();
     service.AddScoped<CreateRecipeDtoValidator>();
     service.AddScoped<UpdateRecipeDtoValidator>();
+
+    // ingredient services
+    service.AddScoped<IIngredientCreateSingleService, IngredientCreateSingleService>();
+    service.AddScoped<IIngredientCreateByFileInputService, IngredientCreateByFileInputService>();
+    service.AddScoped<IngredientCreationBuilder>();
+    service.AddScoped<IngredientCreateDtoValidator>();
 }
 
 static void ConfigureApiServices(IServiceCollection services)

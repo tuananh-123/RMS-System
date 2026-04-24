@@ -85,6 +85,8 @@ public class RMSDbContext(DbContextOptions<RMSDbContext> options) : IdentityDbCo
 
         // Composite key cho RecipeTag
         modelBuilder.Entity<TagForRecipe>().HasKey(rt => new { rt.RecipeID, rt.TagID });
-            
+        
+        // index and set unique
+        modelBuilder.Entity<Ingredient>().HasIndex(i => i.Title).IsUnique();
     }
 }

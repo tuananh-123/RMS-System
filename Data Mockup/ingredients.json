@@ -1,0 +1,348 @@
+[
+    {
+        "Title": "Thịt bò",
+        "Information": "Thịt bò tươi giàu protein và sắt, tốt cho máu.",
+        "CaloriePer100Gram": 250,
+        "SearchKeyword": {
+            "hashtags": [
+                "#bo",
+                "#thitbo",
+                "#beef"
+            ],
+            "keywords": [
+                "bò",
+                "thịt bò",
+                "thăn bò"
+            ]
+        },
+        "CreatedBy": "1"
+    },
+    {
+        "Title": "Thịt gà",
+        "Information": "Nguồn đạm trắng lành mạnh, ít chất béo bão hòa.",
+        "CaloriePer100Gram": 239,
+        "SearchKeyword": {
+            "hashtags": [
+                "#ga",
+                "#thitga",
+                "#chicken"
+            ],
+            "keywords": [
+                "gà",
+                "thịt gà",
+                "ức gà"
+            ]
+        },
+        "CreatedBy": "1"
+    },
+    {
+        "Title": "Cá hồi",
+        "Information": "Chứa nhiều Omega-3 tốt cho tim mạch và trí não.",
+        "CaloriePer100Gram": 208,
+        "SearchKeyword": {
+            "hashtags": [
+                "#cahoi",
+                "#salmon",
+                "#omega3"
+            ],
+            "keywords": [
+                "cá hồi",
+                "fillet cá hồi"
+            ]
+        },
+        "CreatedBy": "1"
+    },
+    {
+        "Title": "Thịt lợn",
+        "Information": "Thịt lợn tươi, dễ chế biến cho nhiều món ăn gia đình.",
+        "CaloriePer100Gram": 242,
+        "SearchKeyword": {
+            "hashtags": [
+                "#lon",
+                "#thitlon",
+                "#pork"
+            ],
+            "keywords": [
+                "lợn",
+                "thịt heo",
+                "ba chỉ"
+            ]
+        },
+        "CreatedBy": "1"
+    },
+    {
+        "Title": "Tôm tươi",
+        "Information": "Hải sản giàu canxi và các khoáng chất thiết yếu.",
+        "CaloriePer100Gram": 99,
+        "SearchKeyword": {
+            "hashtags": [
+                "#tom",
+                "#haisan",
+                "#shrimp"
+            ],
+            "keywords": [
+                "tôm",
+                "tôm sú",
+                "tôm thẻ"
+            ]
+        },
+        "CreatedBy": "1"
+    },
+    {
+        "Title": "Trứng gà",
+        "Information": "Thực phẩm hoàn hảo chứa hầu hết các vitamin cần thiết.",
+        "CaloriePer100Gram": 155,
+        "SearchKeyword": {
+            "hashtags": [
+                "#trung",
+                "#trungga",
+                "#egg"
+            ],
+            "keywords": [
+                "trứng",
+                "hột gà",
+                "trứng gà"
+            ]
+        },
+        "CreatedBy": "1"
+    },
+    {
+        "Title": "Súp lơ xanh",
+        "Information": "Giàu chất xơ và vitamin C, hỗ trợ tiêu hóa.",
+        "CaloriePer100Gram": 34,
+        "SearchKeyword": {
+            "hashtags": [
+                "#suplo",
+                "#broccoli",
+                "#raucu"
+            ],
+            "keywords": [
+                "súp lơ",
+                "bông cải xanh"
+            ]
+        },
+        "CreatedBy": "1"
+    },
+    {
+        "Title": "Cà rốt",
+        "Information": "Chứa nhiều Beta-carotene giúp sáng mắt.",
+        "CaloriePer100Gram": 41,
+        "SearchKeyword": {
+            "hashtags": [
+                "#carot",
+                "#carrot",
+                "#vitaminA"
+            ],
+            "keywords": [
+                "cà rốt",
+                "củ cải đỏ"
+            ]
+        },
+        "CreatedBy": "1"
+    },
+    {
+        "Title": "Khoai tây",
+        "Information": "Nguồn tinh bột phổ biến, cung cấp năng lượng nhanh.",
+        "CaloriePer100Gram": 77,
+        "SearchKeyword": {
+            "hashtags": [
+                "#khoaitay",
+                "#potato"
+            ],
+            "keywords": [
+                "khoai tây",
+                "củ khoai"
+            ]
+        },
+        "CreatedBy": "1"
+    },
+    {
+        "Title": "Nấm hương",
+        "Information": "Nấm có mùi thơm đặc trưng, giàu đạm thực vật.",
+        "CaloriePer100Gram": 33,
+        "SearchKeyword": {
+            "hashtags": [
+                "#nam",
+                "#namhuong",
+                "#mushroom"
+            ],
+            "keywords": [
+                "nấm",
+                "nấm hương",
+                "nấm đông cô"
+            ]
+        },
+        "CreatedBy": "1"
+    },
+    {
+        "Title": "Đậu phụ",
+        "Information": "Sản phẩm từ đậu nành, giàu protein cho người ăn chay.",
+        "CaloriePer100Gram": 76,
+        "SearchKeyword": {
+            "hashtags": [
+                "#dauphu",
+                "#tofu",
+                "#anchay"
+            ],
+            "keywords": [
+                "đậu phụ",
+                "tàu hũ",
+                "đậu hũ"
+            ]
+        },
+        "CreatedBy": "1"
+    },
+    {
+        "Title": "Gạo lứt",
+        "Information": "Gạo nguyên cám giàu chất xơ, tốt cho người giảm cân.",
+        "CaloriePer100Gram": 111,
+        "SearchKeyword": {
+            "hashtags": [
+                "#gaolut",
+                "#brownrice",
+                "#eatclean"
+            ],
+            "keywords": [
+                "gạo lứt",
+                "gạo lức",
+                "cơm thực dưỡng"
+            ]
+        },
+        "CreatedBy": "1"
+    },
+    {
+        "Title": "Quả bơ",
+        "Information": "Chất béo thực vật lành mạnh và vitamin E.",
+        "CaloriePer100Gram": 160,
+        "SearchKeyword": {
+            "hashtags": [
+                "#bo",
+                "#avocado",
+                "#keto"
+            ],
+            "keywords": [
+                "quả bơ",
+                "trái bơ"
+            ]
+        },
+        "CreatedBy": "1"
+    },
+    {
+        "Title": "Sữa tươi",
+        "Information": "Cung cấp canxi dồi dào giúp xương chắc khỏe.",
+        "CaloriePer100Gram": 42,
+        "SearchKeyword": {
+            "hashtags": [
+                "#sua",
+                "#milk",
+                "#dinhduong"
+            ],
+            "keywords": [
+                "sữa",
+                "sữa tươi",
+                "sữa bò"
+            ]
+        },
+        "CreatedBy": "1"
+    },
+    {
+        "Title": "Mực tươi",
+        "Information": "Mực giòn ngọt, chứa nhiều đồng và selen.",
+        "CaloriePer100Gram": 92,
+        "SearchKeyword": {
+            "hashtags": [
+                "#muc",
+                "#squid",
+                "#haisan"
+            ],
+            "keywords": [
+                "mực",
+                "mực tươi",
+                "mực ống"
+            ]
+        },
+        "CreatedBy": "1"
+    },
+    {
+        "Title": "Cà chua",
+        "Information": "Giàu Lycopene chống lão hóa và đẹp da.",
+        "CaloriePer100Gram": 18,
+        "SearchKeyword": {
+            "hashtags": [
+                "#cachua",
+                "#tomato"
+            ],
+            "keywords": [
+                "cà chua",
+                "trái cà chua"
+            ]
+        },
+        "CreatedBy": "1"
+    },
+    {
+        "Title": "Tỏi",
+        "Information": "Gia vị tăng hương vị và tăng cường hệ miễn dịch.",
+        "CaloriePer100Gram": 149,
+        "SearchKeyword": {
+            "hashtags": [
+                "#toi",
+                "#garlic",
+                "#giavi"
+            ],
+            "keywords": [
+                "tỏi",
+                "củ tỏi"
+            ]
+        },
+        "CreatedBy": "1"
+    },
+    {
+        "Title": "Hành tây",
+        "Information": "Giúp món ăn có vị ngọt tự nhiên và mùi thơm.",
+        "CaloriePer100Gram": 40,
+        "SearchKeyword": {
+            "hashtags": [
+                "#hanhtay",
+                "#onion"
+            ],
+            "keywords": [
+                "hành tây",
+                "củ hành"
+            ]
+        },
+        "CreatedBy": "1"
+    },
+    {
+        "Title": "Cải thìa",
+        "Information": "Rau xanh giòn, chứa nhiều vitamin A và K.",
+        "CaloriePer100Gram": 13,
+        "SearchKeyword": {
+            "hashtags": [
+                "#caithia",
+                "#bokchoy",
+                "#rauxanh"
+            ],
+            "keywords": [
+                "cải thìa",
+                "cải chíp"
+            ]
+        },
+        "CreatedBy": "1"
+    },
+    {
+        "Title": "Măng tây",
+        "Information": "Thực phẩm cao cấp giàu chất chống oxy hóa.",
+        "CaloriePer100Gram": 20,
+        "SearchKeyword": {
+            "hashtags": [
+                "#mangtay",
+                "#asparagus"
+            ],
+            "keywords": [
+                "măng tây",
+                "ngọn măng tây"
+            ]
+        },
+        "CreatedBy": "1"
+    }
+]
