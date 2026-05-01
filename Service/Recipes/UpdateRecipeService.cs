@@ -22,7 +22,7 @@ public class UpdateRecipeService(
     private readonly RecipeBuilder _builder = builder;
     private readonly UpdateRecipeDtoValidator _validationRules = validationRules;
 
-    public async Task<ServiceResult> ExecuteSync(int userId, int recipeId, RecipeUpdateDto request)
+    public async Task<ServiceResult> ExecuteSync(string userId, int recipeId, RecipeUpdateDto request)
     {
         // Use AsSplitQuery to avoid Cartesian explosion when including multiple collections
         // step 1: check recipe exists
@@ -158,7 +158,7 @@ public class UpdateRecipeService(
             .Select(i => i.ID)
             .ToHashSetAsync();
 
-    private Recipe BuildRecipe(int userId, RecipeUpdateDto request)
+    private Recipe BuildRecipe(string userId, RecipeUpdateDto request)
     {
         var recipe = MapRecipe(request);
 
@@ -167,7 +167,7 @@ public class UpdateRecipeService(
         return _builder.BuildUpdate(recipe, request);
     }
 
-    private static string GetCreatedBy(int userId) => userId.ToString();
+    private static string GetCreatedBy(string userId) => userId.ToString();
 
     private Recipe MapRecipe(RecipeUpdateDto request) => _mapper.Map<Recipe>(request);
 

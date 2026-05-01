@@ -5,5 +5,5 @@ namespace RMS.IService.IRecipes;
 
 public interface ICreateRecipeService
 {
-    Task<ServiceResult> ExecuteAsync(int userId, RecipeCreateDto request);
+    Task<ServiceResult> ExecuteAsync(string userId, RecipeCreateDto request);
 }

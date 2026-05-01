@@ -15,6 +15,7 @@ public class RMSDbContext(DbContextOptions<RMSDbContext> options) : IdentityDbCo
     public DbSet<RecipeHistory> RecipeHistories { get; set; }
     public DbSet<TagForRecipe> TagForRecipes { get; set; }
     public DbSet<RecipeIngredient> RecipeIngredients { get; set; }
+    public DbSet<RefreshToken> RefreshTokens { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -77,7 +78,7 @@ public class RMSDbContext(DbContextOptions<RMSDbContext> options) : IdentityDbCo
 
         // khai báo SearchKeyword là jsonb
         modelBuilder.Entity<Recipe>().Property(r => r.SearchKeyword).HasColumnType("jsonb").HasConversion(searchKeywordConverter);
-        
+
         modelBuilder.Entity<Ingredient>().Property(i => i.SearchKeyword).HasColumnType("jsonb").HasConversion(searchKeywordConverter);
 
         // Composite key cho RecipeIngredient
@@ -85,8 +86,28 @@ public class RMSDbContext(DbContextOptions<RMSDbContext> options) : IdentityDbCo
 
         // Composite key cho RecipeTag
         modelBuilder.Entity<TagForRecipe>().HasKey(rt => new { rt.RecipeID, rt.TagID });
-        
+
         // index and set unique
         modelBuilder.Entity<Ingredient>().HasIndex(i => i.Title).IsUnique();
+        modelBuilder.Entity<Tag>().HasIndex(t => t.Title).IsUnique();
+        modelBuilder.Entity<Recipe>().HasIndex(r => r.Title).IsUnique();
+        modelBuilder.Entity<Tag>().HasIndex(t => t.Slug).IsUnique();
+        modelBuilder.Entity<Recipe>().HasIndex(t => t.Slug).IsUnique();
+        modelBuilder.Entity<Ingredient>().HasIndex(t => t.Slug).IsUnique();
+
+        modelBuilder.Entity<Tag>().Property(t => t.Slug).IsRequired(false);
+        modelBuilder.Entity<Recipe>().Property(t => t.Slug).IsRequired(false);
+        modelBuilder.Entity<Ingredient>().Property(t => t.Slug).IsRequired(false);
+
+        modelBuilder.Entity<RefreshToken>(rt =>
+        {
+            rt.HasIndex(t => t.Token).IsUnique();
+
+            rt.HasOne(t => t.User)
+                .WithMany()
+                .HasForeignKey(t => t.UserID)
+                .OnDelete(DeleteBehavior.Cascade);
+        });
+
     }
 }

@@ -111,7 +111,7 @@ public class CreateRecipeService(
         return null;
     }
 
-    private Recipe BuildRecipe(int userId, RecipeCreateDto request)
+    private Recipe BuildRecipe(string userId, RecipeCreateDto request)
     {
         var recipe = _mapper.Map<Recipe>(request);
         recipe.CreatedBy = userId.ToString();
@@ -157,7 +157,7 @@ public class CreateRecipeService(
 
     // https://www.coursera.org/courses?query=system%20design&irclickid=yzvWq%3AznlxyZRU6yAnyML2POUku30fyRfwGYxw0&irgwc=1&afsrc=1&utm_medium=partners&utm_source=impact&utm_campaign=6700588&utm_content=b2c&utm_campaignid=Coc%20Coc%20Search&utm_term=14726_SC_1164545_1631165870
 
-    public async Task<ServiceResult> ExecuteAsync(int userId, RecipeCreateDto request)
+    public async Task<ServiceResult> ExecuteAsync(string userId, RecipeCreateDto request)
     {
         // step 1: validate input request
         var validateInputRequestError = ValidateInputRequest(request);

@@ -11,6 +11,7 @@ namespace RMS.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
+[Authorize]
 public class RecipeController(
     ICreateRecipeService createService, 
     IUpdateRecipeService updateService,
@@ -28,7 +29,9 @@ public class RecipeController(
     [HttpGet("get/page/{pageNumber}/size/{pageSize}")]
     public async Task<IActionResult> GetRecipeAsync(int pageNumber, int pageSize)
     {
+#pragma warning disable CA1873 // Avoid potentially expensive logging
         _logger.LogInformation("Fetching recipes for page {pageNumber} with size {pageSize}", pageNumber, pageSize);
+#pragma warning restore CA1873 // Avoid potentially expensive logging
 
         var result = await _recipePagingService.GetRecipePagingAsync(pageNumber, pageSize);
         return result.OK();
@@ -38,54 +41,64 @@ public class RecipeController(
     [HttpGet("get/detail/{recipeId}")]
     public async Task<IActionResult> GetRecipeDetailAsync(int recipeId)
     {
+#pragma warning disable CA1873 // Avoid potentially expensive logging
         _logger.LogInformation("Fetching details for recipe {recipeId}", recipeId);
+#pragma warning restore CA1873 // Avoid potentially expensive logging
 
         var result = await _recipeDetailService.GetRecipeDetailAsync(recipeId);
         return result.OK();
     }
 
-    // [Authorize]
+    [Authorize]
     [HttpPost("add/by/{userId}")]
-    public async Task<IActionResult> AddRecipeAsync(int userId, RecipeCreateDto recipe)
+    public async Task<IActionResult> AddRecipeAsync(string userId, RecipeCreateDto recipe)
     {
+#pragma warning disable CA1873 // Avoid potentially expensive logging
         _logger.LogInformation("Creating recipe for user {userId}", userId);
+#pragma warning restore CA1873 // Avoid potentially expensive logging
 
-        // var userIdFromClaims = GetUserIdFromClaims();
-        // if (userIdFromClaims == null || userIdFromClaims != userId)
-        // {
-        //     _logger.LogWarning("Unauthorized attempt to create recipe for user {userId}", userId);
-        //     return Forbid();
-        // }
+        var userIdFromClaims = GetUserIdFromClaims();
+        if (userIdFromClaims == null || userIdFromClaims != userId)
+        {
+            _logger.LogWarning("Unauthorized attempt to create recipe for user {userId}", userId);
+            return Forbid();
+        }
 
         var result = await _createService.ExecuteAsync(userId, recipe);
+#pragma warning disable CA1873 // Avoid potentially expensive logging
         _logger.LogInformation("Create recipe result for user {userId}: {result}", userId, result.Success ? "Success" : $"Failure - {result.Message}");
+#pragma warning restore CA1873 // Avoid potentially expensive logging
         return ToActionResult(result);
     }
-
+    [Authorize]
     [HttpPut("update/{recipeId}/by/{userId}")]
-    public async Task<IActionResult> UpdateRecipeAsync(int recipeId, int userId, RecipeUpdateDto recipe)
+    public async Task<IActionResult> UpdateRecipeAsync(int recipeId, string userId, RecipeUpdateDto recipe)
     {
+#pragma warning disable CA1873 // Avoid potentially expensive logging
         _logger.LogInformation("Updating recipe {recipeId} for user {userId}", recipeId, userId);
+#pragma warning restore CA1873 // Avoid potentially expensive logging
 
-        // var userIdFromClaims = GetUserIdFromClaims();
-        // if (userIdFromClaims == null || userIdFromClaims != userId)
-        // {
-        //     _logger.LogWarning("Unauthorized attempt to create recipe for user {userId}", userId);
-        //     return Forbid();
-        // }
+        var userIdFromClaims = GetUserIdFromClaims();
+        if (userIdFromClaims == null || userIdFromClaims != userId)
+        {
+            _logger.LogWarning("Unauthorized attempt to create recipe for user {userId}", userId);
+            return Forbid();
+        }
 
         var result = await _updateService.ExecuteSync(userId, recipeId, recipe);
+#pragma warning disable CA1873 // Avoid potentially expensive logging
         _logger.LogInformation("Update recipe {recipeId} result for user {userId}: {result}", recipeId, userId, result.Success ? "Success" : $"Failure - {result.Message}");
+#pragma warning restore CA1873 // Avoid potentially expensive logging
         return ToActionResult(result);
     }
 
-    private int? GetUserIdFromClaims()
+    private string? GetUserIdFromClaims()
     {
         var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
         if (userIdClaim != null)
         {
-            return int.Parse(userIdClaim);
+            return userIdClaim.ToString();
         }
 
         return null;

@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using RMS;
@@ -11,9 +12,11 @@ using RMS;
 namespace RMS.Migrations
 {
     [DbContext(typeof(RMSDbContext))]
-    partial class RMSDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260424202618_indexandUniqueTitle")]
+    partial class indexandUniqueTitle
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -243,9 +246,6 @@ namespace RMS.Migrations
                     b.Property<string>("SearchKeyword")
                         .HasColumnType("jsonb");
 
-                    b.Property<string>("Slug")
-                        .HasColumnType("text");
-
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasColumnType("text");
@@ -254,9 +254,6 @@ namespace RMS.Migrations
                         .HasColumnType("boolean");
 
                     b.HasKey("ID");
-
-                    b.HasIndex("Slug")
-                        .IsUnique();
 
                     b.HasIndex("Title")
                         .IsUnique();
@@ -317,9 +314,6 @@ namespace RMS.Migrations
                     b.Property<int>("Serving")
                         .HasColumnType("integer");
 
-                    b.Property<string>("Slug")
-                        .HasColumnType("text");
-
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasColumnType("text");
@@ -338,9 +332,6 @@ namespace RMS.Migrations
                         .HasColumnType("integer");
 
                     b.HasKey("ID");
-
-                    b.HasIndex("Slug")
-                        .IsUnique();
 
                     b.HasIndex("Title")
                         .IsUnique();
@@ -390,10 +381,6 @@ namespace RMS.Migrations
                     b.Property<int>("Serving")
                         .HasColumnType("integer");
 
-                    b.Property<string>("Slug")
-                        .IsRequired()
-                        .HasColumnType("text");
-
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasColumnType("text");
@@ -440,41 +427,6 @@ namespace RMS.Migrations
                     b.ToTable("RecipeIngredients");
                 });
 
-            modelBuilder.Entity("RMS.Entities.RefreshToken", b =>
-                {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("ID"));
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateTime>("ExpiresAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<bool>("IsRevoked")
-                        .HasColumnType("boolean");
-
-                    b.Property<string>("Token")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("UserID")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("ID");
-
-                    b.HasIndex("Token")
-                        .IsUnique();
-
-                    b.HasIndex("UserID");
-
-                    b.ToTable("RefreshTokens");
-                });
-
             modelBuilder.Entity("RMS.Entities.Tag", b =>
                 {
                     b.Property<int>("ID")
@@ -487,18 +439,11 @@ namespace RMS.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("Color_Hex")
-                        .IsRequired()
-                        .HasColumnType("text");
-
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("CreatedBy")
                         .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Slug")
                         .HasColumnType("text");
 
                     b.Property<string>("Title")
@@ -508,13 +453,7 @@ namespace RMS.Migrations
                     b.Property<bool>("Trash")
                         .HasColumnType("boolean");
 
-                    b.Property<int>("Usage_Count")
-                        .HasColumnType("integer");
-
                     b.HasKey("ID");
-
-                    b.HasIndex("Slug")
-                        .IsUnique();
 
                     b.HasIndex("Title")
                         .IsUnique();
@@ -616,17 +555,6 @@ namespace RMS.Migrations
                     b.Navigation("Ingredient");
 
                     b.Navigation("Recipe");
-                });
-
-            modelBuilder.Entity("RMS.Entities.RefreshToken", b =>
-                {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "User")
-                        .WithMany()
-                        .HasForeignKey("UserID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("RMS.Entities.TagForRecipe", b =>
