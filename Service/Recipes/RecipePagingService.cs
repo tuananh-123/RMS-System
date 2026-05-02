@@ -31,7 +31,7 @@ public class RecipePagingService(
 
             var query = _context.Recipes
                 .AsNoTracking()
-                .Where(r => !r.Trash);
+                .Where(r => !r.Trash);  
 
             var totalCount = await query.CountAsync();
 

@@ -2,7 +2,6 @@ using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.IdentityModel.Tokens;
 using RMS;
 using RMS.Background;
@@ -74,7 +73,7 @@ static void ConfigureDbPeristenceService(IServiceCollection services, IConfigura
     services.AddHostedService<ViewFlushJob>();
     services.Configure<HostOptions>(opts =>
     {
-        opts.ShutdownTimeout = TimeSpan.FromSeconds(30); 
+        opts.ShutdownTimeout = TimeSpan.FromSeconds(30);
     });
 }
 

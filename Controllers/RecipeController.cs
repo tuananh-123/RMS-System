@@ -13,9 +13,9 @@ namespace RMS.Controllers;
 [Route("api/[controller]")]
 [Authorize]
 public class RecipeController(
-    ICreateRecipeService createService, 
+    ICreateRecipeService createService,
     IUpdateRecipeService updateService,
-    IRecipePagingService recipePagingService, 
+    IRecipePagingService recipePagingService,
     IRecipeDetailService recipeDetailService,
     ILogger<RecipeController> logger) : ControllerBase
 {
@@ -27,12 +27,8 @@ public class RecipeController(
 
     [AllowAnonymous]
     [HttpGet("get/page/{pageNumber}/size/{pageSize}")]
-    public async Task<IActionResult> GetRecipeAsync(int pageNumber, int pageSize)
+    public async Task<IActionResult> GetRecipeByPaging(int pageNumber, int pageSize)
     {
-#pragma warning disable CA1873 // Avoid potentially expensive logging
-        _logger.LogInformation("Fetching recipes for page {pageNumber} with size {pageSize}", pageNumber, pageSize);
-#pragma warning restore CA1873 // Avoid potentially expensive logging
-
         var result = await _recipePagingService.GetRecipePagingAsync(pageNumber, pageSize);
         return result.OK();
     }
@@ -41,12 +37,10 @@ public class RecipeController(
     [HttpGet("get/detail/{recipeId}")]
     public async Task<IActionResult> GetRecipeDetailAsync(int recipeId)
     {
-#pragma warning disable CA1873 // Avoid potentially expensive logging
-        _logger.LogInformation("Fetching details for recipe {recipeId}", recipeId);
-#pragma warning restore CA1873 // Avoid potentially expensive logging
-
-        var result = await _recipeDetailService.GetRecipeDetailAsync(recipeId);
-        return result.OK();
+        var (success, message, data) = await _recipeDetailService.GetRecipeDetailFromDistributeCacheAsync(recipeId);
+        if (!success)
+            return NotFound(new { message });
+        return Ok(new { message, data });
     }
 
     [Authorize]
