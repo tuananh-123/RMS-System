@@ -6,6 +6,7 @@ using RMS.IService.IRecipes;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 using RMS.Contants;
+using RMS.Dtos.Recipes;
 
 namespace RMS.Controllers;
 
@@ -26,18 +27,20 @@ public class RecipeController(
     private readonly ILogger<RecipeController> _logger = logger;
 
     [AllowAnonymous]
-    [HttpGet("get/page/{pageNumber}/size/{pageSize}")]
-    public async Task<IActionResult> GetRecipeByPaging(int pageNumber, int pageSize)
+    [HttpGet("get/list/{page}/{pageSize}/{sortBy}")]
+    public async Task<IActionResult> GetRecipeByPaging(int page, int pageSize, string sortBy, [FromQuery]RecipeFilterDto filter, CancellationToken ct)
     {
-        var result = await _recipePagingService.GetRecipePagingAsync(pageNumber, pageSize);
-        return result.OK();
+        var (success, message, data) = await _recipePagingService.Execute(sortBy, filter, ct, page, pageSize);
+        if (!success)
+            return BadRequest(new {message});
+        return Ok(new {message, data});
     }
 
     [AllowAnonymous]
     [HttpGet("get/detail/{recipeId}")]
     public async Task<IActionResult> GetRecipeDetailAsync(int recipeId)
     {
-        var (success, message, data) = await _recipeDetailService.GetRecipeDetailFromDistributeCacheAsync(recipeId);
+        var (success, message, data) = await _recipeDetailService.GetRecipeDetailAsync(recipeId);
         if (!success)
             return NotFound(new { message });
         return Ok(new { message, data });
@@ -47,10 +50,6 @@ public class RecipeController(
     [HttpPost("add/by/{userId}")]
     public async Task<IActionResult> AddRecipeAsync(string userId, RecipeCreateDto recipe)
     {
-#pragma warning disable CA1873 // Avoid potentially expensive logging
-        _logger.LogInformation("Creating recipe for user {userId}", userId);
-#pragma warning restore CA1873 // Avoid potentially expensive logging
-
         var userIdFromClaims = GetUserIdFromClaims();
         if (userIdFromClaims == null || userIdFromClaims != userId)
         {
@@ -59,18 +58,13 @@ public class RecipeController(
         }
 
         var result = await _createService.ExecuteAsync(userId, recipe);
-#pragma warning disable CA1873 // Avoid potentially expensive logging
-        _logger.LogInformation("Create recipe result for user {userId}: {result}", userId, result.Success ? "Success" : $"Failure - {result.Message}");
-#pragma warning restore CA1873 // Avoid potentially expensive logging
         return ToActionResult(result);
     }
+    
     [Authorize]
     [HttpPut("update/{recipeId}/by/{userId}")]
     public async Task<IActionResult> UpdateRecipeAsync(int recipeId, string userId, RecipeUpdateDto recipe)
     {
-#pragma warning disable CA1873 // Avoid potentially expensive logging
-        _logger.LogInformation("Updating recipe {recipeId} for user {userId}", recipeId, userId);
-#pragma warning restore CA1873 // Avoid potentially expensive logging
 
         var userIdFromClaims = GetUserIdFromClaims();
         if (userIdFromClaims == null || userIdFromClaims != userId)
@@ -80,9 +74,6 @@ public class RecipeController(
         }
 
         var result = await _updateService.ExecuteSync(userId, recipeId, recipe);
-#pragma warning disable CA1873 // Avoid potentially expensive logging
-        _logger.LogInformation("Update recipe {recipeId} result for user {userId}: {result}", recipeId, userId, result.Success ? "Success" : $"Failure - {result.Message}");
-#pragma warning restore CA1873 // Avoid potentially expensive logging
         return ToActionResult(result);
     }
 

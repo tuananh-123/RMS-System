@@ -6,21 +6,16 @@ namespace RMS.Helpers;
 
 public static class StringHelper
 {
-    public static string ToSlug(this string text)
+    public static string ToSlug(this string input)
     {
-        if (string.IsNullOrWhiteSpace(text)) return string.Empty;
+        if (string.IsNullOrWhiteSpace(input)) return string.Empty;
 
-        string slug = text.ToLowerInvariant();
+        string slug = input.ToLowerInvariant();
 
-        slug = RemoveDiacritics(slug);
-        
-        // 3. Thay thế các ký tự không phải chữ cái/số thành dấu gạch ngang
-        slug = Regex.Replace(slug, @"[^a-z0-9\s-]", "");
+        slug = input.Normalize(NormalizationForm.FormD);
+        slug = new string([.. input.Where(c => CharUnicodeInfo.GetUnicodeCategory(c) != UnicodeCategory.NonSpacingMark)]);
 
-        // 4. Thay thế nhiều khoảng trắng/gạch ngang liên tiếp thành 1 gạch ngang
-        slug = Regex.Replace(slug, @"[\s-]+", "-").Trim();
-
-        slug = slug.Trim('-');
+        slug = slug.Trim().Replace(" ", "-");
 
         return slug;
     }
@@ -37,22 +32,5 @@ public static class StringHelper
         if (!Regex.IsMatch(password, @"[!@#$%^&*()_+\-=\[\]{};':""\\|,.<>\/?]")) return false;
 
         return true;
-    }
-
-    private static string RemoveDiacritics(string text)
-    {
-        var normalizedString = text.Normalize(NormalizationForm.FormD);
-        var stringBuilder = new StringBuilder();
-
-        foreach (var c in normalizedString)
-        {
-            var unicodeCategory = CharUnicodeInfo.GetUnicodeCategory(c);
-            if (unicodeCategory != UnicodeCategory.NonSpacingMark)
-            {
-                stringBuilder.Append(c);
-            }
-        }
-
-        return stringBuilder.ToString().Normalize(NormalizationForm.FormC);
     }
 }

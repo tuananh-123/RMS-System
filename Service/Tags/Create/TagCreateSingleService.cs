@@ -14,12 +14,12 @@ public class TagCreateSingleService(
     RMSDbContext dbContext,
     IMapper mapper,
     ILogger<TagCreateSingleService> logger,
-    TagCreateSingleDtoValidator validator
-) : BaseService(dbContext, mapper), ITagCreateSingleService
+    TagCreateDtoValidator validator
+) : BaseService(dbContext, mapper), ITagCreateService
 {
     private readonly ILogger<TagCreateSingleService> _logger = logger;
-    private readonly TagCreateSingleDtoValidator _validator = validator;
-    public async Task<ServiceResult> ExecuteAsync(int userId, TagCreateSingleDto request)
+    private readonly TagCreateDtoValidator _validator = validator;
+    public async Task<ServiceResult> ExecuteAsync(int userId, TagCreateDto request)
     {
         // step 1: validate reuqest
         var requestValidation = await _validator.ValidateAsync(request);
@@ -43,7 +43,7 @@ public class TagCreateSingleService(
 
         return await PersistToDatabase(userId, tag);
     }
-    private Tag BuildEntity(int userId, TagCreateSingleDto request)
+    private Tag BuildEntity(int userId, TagCreateDto request)
     {
         var tag = _mapper.Map<Tag>(request);
         tag.Slug = tag.Title.ToSlug();

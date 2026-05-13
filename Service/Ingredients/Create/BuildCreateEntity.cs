@@ -1,6 +1,7 @@
 using AutoMapper;
 using RMS.Dtos.Ingredients;
 using RMS.Entities;
+using RMS.Helpers;
 
 namespace RMS.Service.Ingredients.Create;
 
@@ -11,9 +12,12 @@ public class IngredientCreationBuilder(IMapper mapper)
     {
         var ingredient = _mapper.Map<Ingredient>(request);
         ingredient.CreatedBy = userId.ToString();
+        ingredient.Slug = ingredient.Title.ToSlug();
         NormalizeProperties(ingredient);
         return ingredient;
     }
+
+    
 
     private static void NormalizeProperties(Ingredient entity)
     {

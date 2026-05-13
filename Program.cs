@@ -60,15 +60,28 @@ static void ConfigureDbPeristenceService(IServiceCollection services, IConfigura
     .AddEntityFrameworkStores<RMSDbContext>()
     .AddDefaultTokenProviders();
 
-    services.AddSingleton<IConnectionMultiplexer>(
-        ConnectionMultiplexer.Connect(configuration["Redis:ConnectionString"]!)
-    );
+    // services.AddSingleton<IConnectionMultiplexer>(
+    //     ConnectionMultiplexer.Connect(configuration["Redis:ConnectionString"]!)
+    // );
+
+    services.AddSingleton<IConnectionMultiplexer>(sp =>
+    {
+        var config = ConfigurationOptions.Parse(configuration["Redis:ConnectionString"]!);
+        config.AbortOnConnectFail = false;      
+        config.ConnectRetry = 3;              
+        config.ConnectTimeout = 2000;          
+        config.ReconnectRetryPolicy = new ExponentialRetry(1000);
+
+        return ConnectionMultiplexer.Connect(config);
+    });
 
     services.AddStackExchangeRedisCache(options =>
     {
         options.Configuration = configuration["Redis:ConnectionString"];
         options.InstanceName = "RedisCache";
     });
+
+
 
     services.AddHostedService<ViewFlushJob>();
     services.Configure<HostOptions>(opts =>
@@ -96,8 +109,9 @@ static void ConfigureApplicationServices(IServiceCollection service)
     service.AddScoped<IngredientCreateDtoValidator>();
 
     // tag services
-    service.AddScoped<ITagCreateSingleService, TagCreateSingleService>();
-    service.AddScoped<TagCreateSingleDtoValidator>();
+    service.AddScoped<ITagCreateService, TagCreateSingleService>();
+    service.AddScoped<TagCreateDtoValidator>();
+    service.AddScoped<TagCreateByFileService>();
 
     // auth services
     service.AddScoped<RegisterUserService>();

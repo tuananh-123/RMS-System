@@ -1,13 +1,15 @@
+using System.Data.SqlTypes;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using RMS.Contants;
+using RMS.Helpers;
+using StackExchange.Redis;
 
 namespace RMS.Service;
 
 public class BaseService(
     RMSDbContext dbContext,
-    IMapper mapper
-)
+    IMapper mapper)
 {
     public readonly RMSDbContext _dbContext = dbContext;
     public readonly IMapper _mapper = mapper;

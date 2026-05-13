@@ -1,0 +1,502 @@
+[
+    {
+        "ID": 21,
+        "Color": "Coral",
+        "Title": "Đồ ăn đường phố",
+        "CreatedBy": "1",
+        "Trash": false,
+        "Color_Hex": "#FF7F50",
+        "Slug": "do-an-duong-pho",
+        "Usage_Count": 65
+    },
+    {
+        "ID": 22,
+        "Color": "Salmon",
+        "Title": "Sushi & Sashimi",
+        "CreatedBy": "2",
+        "Trash": false,
+        "Color_Hex": "#FA8072",
+        "Slug": "sushi-sashimi",
+        "Usage_Count": 28
+    },
+    {
+        "ID": 23,
+        "Color": "Khaki",
+        "Title": "Món hầm",
+        "CreatedBy": "1",
+        "Trash": false,
+        "Color_Hex": "#F0E68C",
+        "Slug": "mon-ham",
+        "Usage_Count": 14
+    },
+    {
+        "ID": 24,
+        "Color": "Plum",
+        "Title": "Trà đạo",
+        "CreatedBy": "3",
+        "Trash": false,
+        "Color_Hex": "#DDA0DD",
+        "Slug": "tra-dao",
+        "Usage_Count": 11
+    },
+    {
+        "ID": 25,
+        "Color": "Crimson",
+        "Title": "Bún chả",
+        "CreatedBy": "1",
+        "Trash": false,
+        "Color_Hex": "#DC143C",
+        "Slug": "bun-cha",
+        "Usage_Count": 39
+    },
+    {
+        "ID": 26,
+        "Color": "Orchid",
+        "Title": "Bánh ngọt Pháp",
+        "CreatedBy": "2",
+        "Trash": false,
+        "Color_Hex": "#DA70D6",
+        "Slug": "banh-ngot-phap",
+        "Usage_Count": 22
+    },
+    {
+        "ID": 27,
+        "Color": "Sienna",
+        "Title": "Thịt bò Mỹ",
+        "CreatedBy": "1",
+        "Trash": false,
+        "Color_Hex": "#A0522D",
+        "Slug": "thit-bo-my",
+        "Usage_Count": 17
+    },
+    {
+        "ID": 28,
+        "Color": "Turquoise",
+        "Title": "Cocktail",
+        "CreatedBy": "4",
+        "Trash": false,
+        "Color_Hex": "#40E0D0",
+        "Slug": "cocktail",
+        "Usage_Count": 31
+    },
+    {
+        "ID": 29,
+        "Color": "OliveDrab",
+        "Title": "Salad trộn",
+        "CreatedBy": "1",
+        "Trash": false,
+        "Color_Hex": "#6B8E23",
+        "Slug": "salad-tron",
+        "Usage_Count": 40
+    },
+    {
+        "ID": 30,
+        "Color": "Gold",
+        "Title": "Món Hoa",
+        "CreatedBy": "1",
+        "Trash": false,
+        "Color_Hex": "#FFD700",
+        "Slug": "mon-hoa",
+        "Usage_Count": 25
+    },
+    {
+        "ID": 31,
+        "Color": "Tomato",
+        "Title": "Mì Ý & Pasta",
+        "CreatedBy": "2",
+        "Trash": false,
+        "Color_Hex": "#FF6347",
+        "Slug": "mi-y-pasta",
+        "Usage_Count": 33
+    },
+    {
+        "ID": 32,
+        "Color": "SlateBlue",
+        "Title": "Thực phẩm Keto",
+        "CreatedBy": "1",
+        "Trash": false,
+        "Color_Hex": "#6A5ACD",
+        "Slug": "thuc-pham-keto",
+        "Usage_Count": 19
+    },
+    {
+        "ID": 33,
+        "Color": "DarkRed",
+        "Title": "Lẩu Thái",
+        "CreatedBy": "3",
+        "Trash": false,
+        "Color_Hex": "#8B0000",
+        "Slug": "lau-thai",
+        "Usage_Count": 44
+    },
+    {
+        "ID": 34,
+        "Color": "SkyBlue",
+        "Title": "Kem trái cây",
+        "CreatedBy": "1",
+        "Trash": false,
+        "Color_Hex": "#87CEEB",
+        "Slug": "kem-trai-cay",
+        "Usage_Count": 26
+    },
+    {
+        "ID": 35,
+        "Color": "Peru",
+        "Title": "Cơm tấm",
+        "CreatedBy": "1",
+        "Trash": false,
+        "Color_Hex": "#CD853F",
+        "Slug": "com-tam",
+        "Usage_Count": 55
+    },
+    {
+        "ID": 36,
+        "Color": "DarkKhaki",
+        "Title": "Đồ muối chua",
+        "CreatedBy": "2",
+        "Trash": false,
+        "Color_Hex": "#BDB76B",
+        "Slug": "do-muoi-chua",
+        "Usage_Count": 8
+    },
+    {
+        "ID": 37,
+        "Color": "FireBrick",
+        "Title": "Kimchi",
+        "CreatedBy": "4",
+        "Trash": false,
+        "Color_Hex": "#B22222",
+        "Slug": "kimchi",
+        "Usage_Count": 21
+    },
+    {
+        "ID": 38,
+        "Color": "RosyBrown",
+        "Title": "Cà phê sữa đá",
+        "CreatedBy": "1",
+        "Trash": false,
+        "Color_Hex": "#BC8F8F",
+        "Slug": "ca-phe-sua-da",
+        "Usage_Count": 72
+    },
+    {
+        "ID": 39,
+        "Color": "ForestGreen",
+        "Title": "Đặc sản Tây Bắc",
+        "CreatedBy": "3",
+        "Trash": false,
+        "Color_Hex": "#228B22",
+        "Slug": "dac-san-tay-bac",
+        "Usage_Count": 13
+    },
+    {
+        "ID": 40,
+        "Color": "DarkCyan",
+        "Title": "Bia thủ công",
+        "CreatedBy": "1",
+        "Trash": false,
+        "Color_Hex": "#008B8B",
+        "Slug": "bia-thu-cong",
+        "Usage_Count": 18
+    },
+    {
+        "ID": 41,
+        "Color": "IndianRed",
+        "Title": "Khô bò",
+        "CreatedBy": "2",
+        "Trash": false,
+        "Color_Hex": "#CD5C5C",
+        "Slug": "kho-bo",
+        "Usage_Count": 9
+    },
+    {
+        "ID": 42,
+        "Color": "PaleGreen",
+        "Title": "Nước detox",
+        "CreatedBy": "1",
+        "Trash": false,
+        "Color_Hex": "#98FB98",
+        "Slug": "nuoc-detox",
+        "Usage_Count": 15
+    },
+    {
+        "ID": 43,
+        "Color": "DarkOrange",
+        "Title": "Bún bò Huế",
+        "CreatedBy": "1",
+        "Trash": false,
+        "Color_Hex": "#FF8C00",
+        "Slug": "bun-bo-hue",
+        "Usage_Count": 47
+    },
+    {
+        "ID": 44,
+        "Color": "Wheat",
+        "Title": "Yến mạch",
+        "CreatedBy": "5",
+        "Trash": false,
+        "Color_Hex": "#F5DEB3",
+        "Slug": "yen-mach",
+        "Usage_Count": 11
+    },
+    {
+        "ID": 45,
+        "Color": "SteelBlue",
+        "Title": "Món hấp",
+        "CreatedBy": "1",
+        "Trash": false,
+        "Color_Hex": "#4682B4",
+        "Slug": "mon-hap",
+        "Usage_Count": 23
+    },
+    {
+        "ID": 46,
+        "Color": "DarkGoldenRod",
+        "Title": "Cơm chiên",
+        "CreatedBy": "2",
+        "Trash": false,
+        "Color_Hex": "#B8860B",
+        "Slug": "com-chien",
+        "Usage_Count": 36
+    },
+    {
+        "ID": 47,
+        "Color": "Thistle",
+        "Title": "Sữa chua",
+        "CreatedBy": "1",
+        "Trash": false,
+        "Color_Hex": "#D8BFD8",
+        "Slug": "sua-chua",
+        "Usage_Count": 29
+    },
+    {
+        "ID": 48,
+        "Color": "CadetBlue",
+        "Title": "Cháo dinh dưỡng",
+        "CreatedBy": "3",
+        "Trash": false,
+        "Color_Hex": "#5F9EA0",
+        "Slug": "chao-dinh-duong",
+        "Usage_Count": 7
+    },
+    {
+        "ID": 49,
+        "Color": "Maroon",
+        "Title": "Socola đen",
+        "CreatedBy": "1",
+        "Trash": false,
+        "Color_Hex": "#800000",
+        "Slug": "socola-den",
+        "Usage_Count": 16
+    },
+    {
+        "ID": 50,
+        "Color": "YellowGreen",
+        "Title": "Trà xanh Thái",
+        "CreatedBy": "4",
+        "Trash": false,
+        "Color_Hex": "#9ACD32",
+        "Slug": "tra-xanh-thai",
+        "Usage_Count": 24
+    },
+    {
+        "ID": 51,
+        "Color": "LightCoral",
+        "Title": "Tôm hùm",
+        "CreatedBy": "1",
+        "Trash": false,
+        "Color_Hex": "#F08080",
+        "Slug": "tom-hum",
+        "Usage_Count": 5
+    },
+    {
+        "ID": 52,
+        "Color": "SeaGreen",
+        "Title": "Rau mầm",
+        "CreatedBy": "2",
+        "Trash": false,
+        "Color_Hex": "#2E8B57",
+        "Slug": "rau-mam",
+        "Usage_Count": 12
+    },
+    {
+        "ID": 53,
+        "Color": "GoldenRod",
+        "Title": "Khoai tây chiên",
+        "CreatedBy": "1",
+        "Trash": false,
+        "Color_Hex": "#DAA520",
+        "Slug": "khoai-tay-chien",
+        "Usage_Count": 58
+    },
+    {
+        "ID": 54,
+        "Color": "DarkSlateBlue",
+        "Title": "Thực phẩm bổ sung",
+        "CreatedBy": "1",
+        "Trash": false,
+        "Color_Hex": "#483D8B",
+        "Slug": "thuc-pham-bo-sung",
+        "Usage_Count": 3
+    },
+    {
+        "ID": 55,
+        "Color": "Chocolate",
+        "Title": "Bánh quy",
+        "CreatedBy": "2",
+        "Trash": false,
+        "Color_Hex": "#D2691E",
+        "Slug": "banh-quy",
+        "Usage_Count": 20
+    },
+    {
+        "ID": 56,
+        "Color": "DodgerBlue",
+        "Title": "Soda lạnh",
+        "CreatedBy": "1",
+        "Trash": false,
+        "Color_Hex": "#1E90FF",
+        "Slug": "soda-lanh",
+        "Usage_Count": 17
+    },
+    {
+        "ID": 57,
+        "Color": "SandyBrown",
+        "Title": "Bánh xèo",
+        "CreatedBy": "3",
+        "Trash": false,
+        "Color_Hex": "#F4A460",
+        "Slug": "banh-xeo",
+        "Usage_Count": 22
+    },
+    {
+        "ID": 58,
+        "Color": "DarkOliveGreen",
+        "Title": "Gia vị lẩu",
+        "CreatedBy": "1",
+        "Trash": false,
+        "Color_Hex": "#556B2F",
+        "Slug": "gia-vi-lau",
+        "Usage_Count": 10
+    },
+    {
+        "ID": 59,
+        "Color": "MediumVioletRed",
+        "Title": "Rượu trái cây",
+        "CreatedBy": "4",
+        "Trash": false,
+        "Color_Hex": "#C71585",
+        "Slug": "ruou-trai-cay",
+        "Usage_Count": 6
+    },
+    {
+        "ID": 60,
+        "Color": "DeepPink",
+        "Title": "Mứt tết",
+        "CreatedBy": "1",
+        "Trash": false,
+        "Color_Hex": "#FF1493",
+        "Slug": "mut-tet",
+        "Usage_Count": 4
+    },
+    {
+        "ID": 61,
+        "Color": "BurlyWood",
+        "Title": "Ngũ cốc",
+        "CreatedBy": "2",
+        "Trash": false,
+        "Color_Hex": "#DEB887",
+        "Slug": "ngu-coc",
+        "Usage_Count": 31
+    },
+    {
+        "ID": 62,
+        "Color": "MediumSeaGreen",
+        "Title": "Thực phẩm sạch",
+        "CreatedBy": "1",
+        "Trash": false,
+        "Color_Hex": "#3CB371",
+        "Slug": "thuc-pham-sach",
+        "Usage_Count": 45
+    },
+    {
+        "ID": 63,
+        "Color": "RoyalBlue",
+        "Title": "Hải sản nướng",
+        "CreatedBy": "1",
+        "Trash": false,
+        "Color_Hex": "#4169E1",
+        "Slug": "hai-san-nuong",
+        "Usage_Count": 19
+    },
+    {
+        "ID": 64,
+        "Color": "NavajoWhite",
+        "Title": "Dimsum",
+        "CreatedBy": "3",
+        "Trash": false,
+        "Color_Hex": "#FFDEAD",
+        "Slug": "dimsum",
+        "Usage_Count": 27
+    },
+    {
+        "ID": 65,
+        "Color": "FireBrick",
+        "Title": "Gà rán",
+        "CreatedBy": "1",
+        "Trash": false,
+        "Color_Hex": "#B22222",
+        "Slug": "ga-ran",
+        "Usage_Count": 50
+    },
+    {
+        "ID": 66,
+        "Color": "SpringGreen",
+        "Title": "Kem tươi",
+        "CreatedBy": "2",
+        "Trash": false,
+        "Color_Hex": "#00FF7F",
+        "Slug": "kem-tuoi",
+        "Usage_Count": 18
+    },
+    {
+        "ID": 67,
+        "Color": "SlateGray",
+        "Title": "Đồ đóng hộp",
+        "CreatedBy": "1",
+        "Trash": false,
+        "Color_Hex": "#708090",
+        "Slug": "do-dong-hop",
+        "Usage_Count": 12
+    },
+    {
+        "ID": 68,
+        "Color": "MediumPurple",
+        "Title": "Khoai lang tím",
+        "CreatedBy": "1",
+        "Trash": false,
+        "Color_Hex": "#9370DB",
+        "Slug": "khoai-lang-tim",
+        "Usage_Count": 9
+    },
+    {
+        "ID": 69,
+        "Color": "DarkSalmon",
+        "Title": "Cơm niêu",
+        "CreatedBy": "2",
+        "Trash": false,
+        "Color_Hex": "#E9967A",
+        "Slug": "com-nieu",
+        "Usage_Count": 14
+    },
+    {
+        "ID": 70,
+        "Color": "MidnightBlue",
+        "Title": "Tiệc tối cao cấp",
+        "CreatedBy": "1",
+        "Trash": false,
+        "Color_Hex": "#191970",
+        "Slug": "tiec-toi-cao-cap",
+        "Usage_Count": 3
+    }
+]

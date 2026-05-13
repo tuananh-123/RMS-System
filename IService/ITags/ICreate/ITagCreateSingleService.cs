@@ -3,7 +3,7 @@ using RMS.Dtos.Tags.Create;
 
 namespace RMS.IService.ITags.ICreate;
 
-public interface ITagCreateSingleService
+public interface ITagCreateService
 {
-    Task<ServiceResult> ExecuteAsync(int userId, TagCreateSingleDto request);
+    Task<ServiceResult> ExecuteAsync(int userId, TagCreateDto request);
 }

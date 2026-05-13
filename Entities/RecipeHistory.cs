@@ -8,13 +8,13 @@ public class RecipeHistory : BaseEntity
     
     public string  Description { get; set; } = string.Empty;
     [Column(TypeName = "int")]
-    public Nation Nation { get; set; } = Nation.Unknown;
+    public int Nation { get; set; } = -1;
     public int[] Cuisine { get; set; } = [];
     public int Serving { get; set; }
     public double TotalCalories { get; set; }
     public int CookingTime { get; set; }
     [Column(TypeName = "int")]
-    public Difficulty Difficulty { get; set; } = Difficulty.Unknown;
+    public int Difficulty { get; set; } = -1;
     public string ImageCover { get; set; } = string.Empty;
     public string VideoUrl { get; set; } = string.Empty;
     public int VersionNumber { get; set; }

@@ -41,3 +41,8 @@ public readonly struct IngredientDto
     public string Unit { get; init; }
     public double Quantity { get; init; }
 }
+
+public readonly struct HistoryDto
+{
+    
+}

@@ -4,6 +4,7 @@ using RMS.Contants;
 using RMS.CustomDtoValidators;
 using RMS.Dtos;
 using RMS.Entities;
+using RMS.Helpers;
 using RMS.IService.IRecipes;
 
 namespace RMS.Service.Recipes;
@@ -114,6 +115,7 @@ public class CreateRecipeService(
     private Recipe BuildRecipe(string userId, RecipeCreateDto request)
     {
         var recipe = _mapper.Map<Recipe>(request);
+        recipe.Slug = recipe.Title.ToSlug();
         recipe.CreatedBy = userId.ToString();
         return _builder.BuildCreate(recipe, request);
     }
